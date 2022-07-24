@@ -36,11 +36,11 @@ const (
 
 var (
 	// RegEx for parsing iwlist output
-	cellRE       = regexp.MustCompile("(?m)^\\s*Cell")
-	essidRE      = regexp.MustCompile("(?m)^\\s*ESSID.*")
-	encKeyOptRE  = regexp.MustCompile("(?m)^\\s*Encryption key:(on|off)$")
-	wpa2RE       = regexp.MustCompile("(?m)^\\s*IE: IEEE 802.11i/WPA2 Version 1$")
-	authSuitesRE = regexp.MustCompile("(?m)^\\s*Authentication Suites .*$")
+	cell       = regexp.MustCompile(`(?m)^\s*Cell`)
+	essid      = regexp.MustCompile(`(?m)^\\s*ESSID.*`)
+	encKeyOpt  = regexp.MustCompile(`(?m)^\\s*Encryption key:(on|off)$`)
+	wpa2       = regexp.MustCompile(`(?m)^\\s*IE: IEEE 802.11i/WPA2 Version 1$`)
+	authSuites = regexp.MustCompile(`(?m)^\\s*Authentication Suites .*$`)
 )
 
 type SecProto int
@@ -87,9 +87,9 @@ func (w *IWLWorker) Scan(stdout, stderr io.Writer) ([]Option, error) {
  */
 
 func parseIwlistOut(o []byte) []Option {
-	cells := cellRE.FindAllIndex(o, -1)
-	essids := essidRE.FindAll(o, -1)
-	encKeyOpts := encKeyOptRE.FindAll(o, -1)
+	cells := cell.FindAllIndex(o, -1)
+	essids := essid.FindAll(o, -1)
+	encKeyOpts := encKeyOpt.FindAll(o, -1)
 
 	if cells == nil {
 		return nil
@@ -117,14 +117,14 @@ func parseIwlistOut(o []byte) []Option {
 		}
 		// Narrow down the scope when looking for WPA Tag
 		wpa2SearchArea := o[start:end]
-		l := wpa2RE.FindIndex(wpa2SearchArea)
+		l := wpa2.FindIndex(wpa2SearchArea)
 		if l == nil {
 			res = append(res, Option{essid, NotSupportedProto})
 			continue
 		}
 		// Narrow down the scope when looking for Authorization Suites
 		authSearchArea := wpa2SearchArea[l[0]:]
-		authSuites := strings.Trim(strings.Split(string(authSuitesRE.Find(authSearchArea)), ":")[1], "\n ")
+		authSuites := strings.Trim(strings.Split(string(authSuites.Find(authSearchArea)), ":")[1], "\n ")
 		switch authSuites {
 		case "PSK":
 			res = append(res, Option{essid, WpaPsk})
@@ -185,7 +185,7 @@ func (w *IWLWorker) Connect(stdout, stderr io.Writer, a ...string) error {
 		defer outfile.Close()
 		if err = cmd.Run(); err != nil {
 			log.Print(err)
-			fmt.Sprintf("%s %s\n", time.Now().String(), err.Error())
+			fmt.Printf("%s %s\n", time.Now().String(), err.Error())
 		}
 		c <- fmt.Errorf("wpa supplicant exited unexpectedly")
 
@@ -199,7 +199,7 @@ func (w *IWLWorker) Connect(stdout, stderr io.Writer, a ...string) error {
 		cmd.Stdout, cmd.Stderr = outfile, outfile
 		if err != nil {
 			log.Print(err)
-			fmt.Sprintf("%s %s\n", time.Now().String(), err.Error())
+			fmt.Printf("%s %s\n", time.Now().String(), err.Error())
 		}
 		defer outfile.Close()
 		c <- cmd.Run()

@@ -74,7 +74,7 @@ func TestGenerateConfig(t *testing.T) {
 	}
 }
 
-func TestCellRE(t *testing.T) {
+func TestCell(t *testing.T) {
 	testcases := []struct {
 		s   string
 		exp bool
@@ -85,13 +85,13 @@ func TestCellRE(t *testing.T) {
 		{"\"blah blah Cell blah blah\"", false},
 	}
 	for _, test := range testcases {
-		if out := cellRE.MatchString(test.s); out != test.exp {
+		if out := cell.MatchString(test.s); out != test.exp {
 			t.Errorf("%s\ngot:%v\nwant:%v", test.s, out, test.exp)
 		}
 	}
 }
 
-func TestEssidRE(t *testing.T) {
+func TestEssid(t *testing.T) {
 	testcases := []struct {
 		s   string
 		exp bool
@@ -103,13 +103,13 @@ func TestEssidRE(t *testing.T) {
 		{"blah blah ESSID blah", false},
 	}
 	for _, test := range testcases {
-		if out := essidRE.MatchString(test.s); out != test.exp {
+		if out := essid.MatchString(test.s); out != test.exp {
 			t.Errorf("%s\ngot:%v\nwant:%v", test.s, out, test.exp)
 		}
 	}
 }
 
-func TestEncKeyOptRE(t *testing.T) {
+func TestEncKeyOpt(t *testing.T) {
 	testcases := []struct {
 		s   string
 		exp bool
@@ -123,13 +123,13 @@ func TestEncKeyOptRE(t *testing.T) {
 		{"blah blah Encryption key:off blah blah", false},
 	}
 	for _, test := range testcases {
-		if out := encKeyOptRE.MatchString(test.s); out != test.exp {
+		if out := encKeyOpt.MatchString(test.s); out != test.exp {
 			t.Errorf("%s\ngot:%v\nwant:%v", test.s, out, test.exp)
 		}
 	}
 }
 
-func TestWpa2RE(t *testing.T) {
+func TestWpa2(t *testing.T) {
 	testcases := []struct {
 		s   string
 		exp bool
@@ -139,13 +139,13 @@ func TestWpa2RE(t *testing.T) {
 		{"blah blah IE: IEEE 802.11i/WPA2 Version 1", false},
 	}
 	for _, test := range testcases {
-		if out := wpa2RE.MatchString(test.s); out != test.exp {
+		if out := wpa2.MatchString(test.s); out != test.exp {
 			t.Errorf("%s\ngot:%v\nwant:%v", test.s, out, test.exp)
 		}
 	}
 }
 
-func TestAuthSuitesRE(t *testing.T) {
+func TestAuthSuites(t *testing.T) {
 	testcases := []struct {
 		s   string
 		exp bool
@@ -160,7 +160,7 @@ func TestAuthSuitesRE(t *testing.T) {
 		{"blah blah Authentication Suites : blah blah", false},
 	}
 	for _, test := range testcases {
-		if out := authSuitesRE.MatchString(test.s); out != test.exp {
+		if out := authSuites.MatchString(test.s); out != test.exp {
 			t.Errorf("%s\ngot:%v\nwant:%v", test.s, out, test.exp)
 		}
 	}
