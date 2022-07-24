@@ -68,7 +68,7 @@ func TestGenerateConfig(t *testing.T) {
 		out, err := generateConfig(test.args...)
 		if !reflect.DeepEqual(err, test.err) || !bytes.Equal(out, test.exp) {
 			t.Logf("TEST %v", test.name)
-			fncCall := fmt.Sprintf("genrateConfig(%v)", test.args)
+			fncCall := fmt.Sprintf("generateConfig(%v)", test.args)
 			t.Errorf("%s\ngot:[%v, %v]\nwant:[%v, %v]", fncCall, string(out), err, string(test.exp), test.err)
 		}
 	}
