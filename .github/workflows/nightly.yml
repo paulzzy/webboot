@@ -10,8 +10,8 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in
 # parallel.
 jobs:
-  # This job will build the linux kernel.
-  buildKernel:
+  # This job will download the Linux kernel (5.6.14) from https://github.com/u-root/webboot-distro
+  downloadKernel:
     runs-on: ubuntu-latest
     # Environment variables
     env:
@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: ${{ env.WEBBOOT }}
-      - name: Kernel Build
+      - name: Download Kernel
         run: |
           ./nightly.sh
           ls -l bzImage
@@ -41,7 +41,7 @@ jobs:
 
   # This job will run the matrix of distros.
   runDistros:
-    needs: buildKernel
+    needs: downloadKernel
     runs-on: ubuntu-latest
     # Environment variables
     env:
