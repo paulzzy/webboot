@@ -52,6 +52,7 @@ jobs:
       # qemu binary and kernel for integration test
       UROOT_QEMU: qemu-system-x86_64
       UROOT_KERNEL: ${{ github.workspace }}/src/github.com/${{ github.repository }}/bzImage
+      UROOT_INITRAMFS: /tmp/initramfs.linux_amd64.cpio
     # Set the working directory to the correct place in $GOPATH.
     defaults:
       run:
