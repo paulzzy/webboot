@@ -28,4 +28,4 @@ wpa_supplicant-*/
 u-root
 
 # Kernel binary for integration testing
-bzImage
+integration/bzImage
